@@ -1,0 +1,32 @@
+import json
+import csv
+
+
+def read_file():
+    with open('purchase_log.txt') as f:
+        a = f.readline()
+        b=dict()
+        while a:
+            a=json.loads(a)
+            b[a['user_id']]=a['category']
+            a = f.readline()
+        return b
+
+
+def csv_work(full_dict):
+    with open('visit_log.csv') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if row[0] in full_dict:
+                write_new_csv_file([full_dict[row[0]], row[0], row[1]])
+
+
+def write_new_csv_file(line):
+    with open('new_file.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(line)
+
+
+if __name__ == "__main__":
+    full_dict = read_file()
+    csv_work(full_dict)
